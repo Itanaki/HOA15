@@ -1,0 +1,22 @@
+
+- name: installing  the components for neutron
+  apt:
+    name: neutron-linuxbridge-agent
+  when: ansible_distribution == "Ubuntu"
+
+- name: install neutron
+  apt:
+    name: neutron-server
+    state: present
+  become: true
+
+- name: restarting the compute service
+  shell: service nova-compute restart
+  when: ansible_distribution == "Ubuntu"
+
+- name: restart neutron
+  service:
+    name: neutron-server
+    state: restarted
+    enabled: yes
+  become: true
